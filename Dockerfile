@@ -9,13 +9,15 @@ LABEL project="Demo Institucional Assets"
 COPY index.html /usr/share/nginx/html/index.html
 
 # 2. Copiamos la carpeta de activos (assets) completa
-# Usamos el slash al final para asegurar que se copie el contenido en la ruta destino
+# Al usar assets/ (con slash) Docker copia el CONTENIDO de tu carpeta local 
+# dentro de la carpeta /assets/ del contenedor.
 COPY assets/ /usr/share/nginx/html/assets/
 
-# 3. SEGURIDAD Y CONTROL: Ajuste de permisos
-# Nginx corre como un usuario sin privilegios en entornos endurecidos.
-# Aseguramos que los archivos sean legibles por el servidor.
-RUN chmod -R 755 /usr/share/nginx/html
+# 3. SEGURIDAD Y CONTROL: Ajuste de propietario y permisos
+# En sistemas Linux/Docker, es vital que el usuario que corre el servicio (nginx)
+# sea el dueño de los archivos para evitar errores 403 o fallos de lectura.
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chmod -R 755 /usr/share/nginx/html
 
 # Exposición del puerto estándar para tráfico HTTP
 EXPOSE 80
