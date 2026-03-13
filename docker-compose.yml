@@ -1,0 +1,22 @@
+services:
+  kepler-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kepler_institutional_demo
+    # 01_manifiesto_core: Control de recursos (Límites estrictos)
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
+    ports:
+      - "192.168.1.90:8080:80"
+    restart: always
+    # Red aislada para seguridad
+    networks:
+      - kepler-net
+
+networks:
+  kepler-net:
+    driver: bridge
